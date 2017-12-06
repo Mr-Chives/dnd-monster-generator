@@ -1,5 +1,3 @@
-import java.awt.Font;
-
 /**
  * StatObject is a class that allows a monster's stat to include an associated
  * value, as well as additional info, such as hit dice, lists of actions, ability score
@@ -10,17 +8,15 @@ class StatObject {
 	
 }
 
-class StatHitPoints {
+class HitPoints {
 	private int avgHitPoints;
 	private int hitDie;
 	private int numOfHitDice;
-	private int asConModifier;
 	private AbilityScores as;
-	public StatHitPoints(AbilityScores as) {
+	public HitPoints(AbilityScores as) {
 		this.as = as;
 		hitDie = 4;
 		numOfHitDice = 1;
-		asConModifier = as.getAbilityScore("con");
 		setAvgHitPoints();
 	}
 	/**
@@ -53,7 +49,7 @@ class StatHitPoints {
 	public int getNumOfHitDice() {
 		return numOfHitDice;
 	}
-	
+	/*
 	public void setAbilityScores(int asStr, int asDex, int asCon, int asInt, int asWis, int asCha) {
 		if (asStr < 1) {
 			as.setAbilityScore("str", 10);
@@ -88,6 +84,68 @@ class StatHitPoints {
 	}
 	public AbilityScores getAbilityScores() {
 		return as;
+	}*/
+}
+
+class ArmorClass {
+	private AbilityScores as;
+	private int ac;
+	private boolean natArmor; //If true, armor class will be determined by fixed number.
+	private int natArmorVal;
+	public ArmorClass(AbilityScores as) {
+		this.as = as;
+		natArmor = false;
+		natArmorVal = 0;
+		ac = 0;
+		setArmorClass();
+	}
+	public void setArmorClass() {
+		ac = 10 + as.getMod("dex");
+		if (hasNatArmor() == true) {
+			ac = ac + natArmorVal;
+		}
+	}
+	public void setNatArmor(boolean natArmor) {
+		this.natArmor = natArmor;
+		setArmorClass();
+	}
+	public boolean hasNatArmor() {
+		return natArmor;
+	}
+	public void setNatArmorVal(int natArmorVal) {
+		this.natArmorVal = natArmorVal;
+	}
+	public int getNatArmorVal() {
+		return natArmorVal;
+	}
+}
+
+class Abilities {
+	private String[] abilities;
+	public Abilities() {
+		abilities = null;
+	}
+	public Abilities(String[] abilities) {
+		setAbilities(abilities);
+	}
+	public void setAbilities(String[] abilities) {
+		this.abilities = abilities;
+	}
+	public String[] getAbilities() {
+		return abilities;
+	}
+	@Override
+	public String toString() {
+		if (abilities.equals(null)) {
+			return "None";
+		} else {
+			String result = "";
+			for (int i = 0; i < abilities.length - 1; i++) {
+				result = result + String.format("%s, ", abilities[i]);
+			}
+			result = result + abilities[-1];
+			return result;
+		}
 	}
 }
 
@@ -182,6 +240,15 @@ class AbilityScores {
 			return 0;
 		}
 	}
+	
+	public void setAbilityScores(int asStr, int asDex, int asCon, int asInt, int asWis, int asCha) {
+		setAbilityScore("str",asStr);
+		setAbilityScore("dex",asDex);
+		setAbilityScore("con",asCon);
+		setAbilityScore("int",asInt);
+		setAbilityScore("wis",asWis);
+		setAbilityScore("cha",asCha);
+	}
 	/**
 	 * This private function will convert the specified ability score into its
 	 * proper modifier. 
@@ -257,6 +324,105 @@ class AbilityScores {
 			return modCha;
 		} else {
 			return 0;
+		}
+	}
+}
+
+class Actions {
+	private String[] actions;
+	public Actions() {
+		actions = null;
+	}
+	public Actions(String[] actions) {
+		setActions(actions);
+	}
+	public void setActions(String[] actions) {
+		this.actions = actions;
+	}
+	public String[] getActions() {
+		return actions;
+	}
+	@Override
+	public String toString() {
+		if (actions.equals(null)) {
+			return "None";
+		} else {
+			String result = "";
+			for (int i = 0; i < actions.length; i++) {
+				result = result + String.format("%s\n", actions[i]);
+			}
+			return result;
+		}
+	}
+}
+
+class Languages {
+	private String[] langs;
+	public Languages() {
+		langs = null;
+	}
+	public Languages(String[] langs) {
+		setLanguages(langs);
+	}
+	public void setLanguages(String[] langs) {
+		this.langs = new String[langs.length];
+		this.langs = langs;
+	}
+	public String[] getLanguages() {
+		return langs;
+	}
+	@Override
+	public String toString() {
+		if (langs.equals(null)) {
+			return "None";
+		} else {
+			String result = "";
+			for (int i = 0; i < langs.length - 1; i++) {
+				result = result + String.format("%s, ", langs[i]);
+			}
+			result = result + langs[-1];
+			return result;
+		}
+	}
+}
+
+class Senses {
+	private AbilityScores as;
+	private int passivePerception;
+	private String[] senses;
+	public Senses(AbilityScores as) {
+		this.as = as;
+		senses = null;
+		setPassivePerception();
+	}
+	public Senses(AbilityScores as, String[] senses) {
+		this.as = as;
+		setSenses(senses);
+		setPassivePerception();
+	}
+	public void setPassivePerception() {
+		passivePerception = 10 + as.getMod("wis");
+	}
+	public int getPassivePerception() {
+		return passivePerception;
+	}
+	public void setSenses(String[] senses) {
+		this.senses = senses;
+	}
+	public String[] getSenses() {
+		return senses;
+	}
+	@Override
+	public String toString() {
+		if (senses.equals(null)) {
+			return "None";
+		} else {
+			String result = "";
+			for (int i = 0; i < senses.length - 1; i++) {
+				result = result + String.format("%s, ", senses[i]);
+			}
+			result = result + senses[-1];
+			return result;
 		}
 	}
 }
