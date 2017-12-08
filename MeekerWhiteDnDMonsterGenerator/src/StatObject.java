@@ -1,15 +1,5 @@
 import java.io.Serializable;
 
-/**
- * StatObject is a class that allows a monster's stat to include an associated
- * value, as well as additional info, such as hit dice, lists of actions, ability score
- * modifiers, etc.
- * @author Ryan
- */
-class StatObject {
-	
-}
-
 class HitPoints implements Serializable {
 	private int avgHitPoints;
 	private int hitDie;
